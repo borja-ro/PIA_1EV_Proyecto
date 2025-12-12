@@ -1,0 +1,61 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.Core", "Backend\MovieManager.Core\MovieManager.Core.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.Infrastructure", "Backend\MovieManager.Infrastructure\MovieManager.Infrastructure.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.API", "Backend\MovieManager.API\MovieManager.API.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.MCP", "Backend\MovieManager.MCP\MovieManager.MCP.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.Console", "Frontend\MovieManager.Console\MovieManager.Console.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManager.MAUI", "Frontend\MovieManager.MAUI\MovieManager.MAUI.csproj", "{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3E}
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC943} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3E}
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC944} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3E}
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC945} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3E}
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC946} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3F}
+		{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC948} = {F5B5C3E3-1E3E-4D3E-9E3E-3E3E3E3E3E3F}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,41 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# IDE files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*~
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# macOS
+.DS_Store
+**/.DS_Store
+._*
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Sensitive data
+appsettings.Development.json
+*.env
+.env
+.claude/
+.idea/
+.vscode/
+CLAUDE.md

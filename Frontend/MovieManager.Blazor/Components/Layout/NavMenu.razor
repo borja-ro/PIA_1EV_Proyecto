@@ -1,0 +1,87 @@
+﻿<div class="nav-container">
+    <div class="nav-brand">
+        <span class="brand-icon">🎬</span>
+        <span class="brand-text">MovieManager</span>
+    </div>
+
+    <nav class="nav-menu">
+        <NavLink class="nav-item" href="/" Match="NavLinkMatch.All">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Inicio</span>
+        </NavLink>
+
+        <NavLink class="nav-item" href="/query">
+            <span class="nav-icon">🔍</span>
+            <span class="nav-text">Consultas</span>
+        </NavLink>
+
+        <NavLink class="nav-item" href="/examples">
+            <span class="nav-icon">💡</span>
+            <span class="nav-text">Ejemplos</span>
+        </NavLink>
+    </nav>
+</div>
+
+<style>
+    .nav-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .brand-icon {
+        font-size: 2rem;
+    }
+
+    .brand-text {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .nav-item.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 600;
+    }
+
+    .nav-icon {
+        font-size: 1.3rem;
+    }
+
+    .nav-text {
+        font-size: 1rem;
+    }
+</style>

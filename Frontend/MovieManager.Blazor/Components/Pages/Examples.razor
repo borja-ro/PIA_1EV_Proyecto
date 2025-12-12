@@ -1,0 +1,428 @@
+@page "/examples"
+@rendermode InteractiveServer
+
+<PageTitle>Ejemplos - MovieManager</PageTitle>
+
+<div class="examples-container">
+    <div class="examples-header">
+        <h1>💡 Ejemplos de Consultas</h1>
+        <p>Aprende cómo hacer consultas efectivas al sistema</p>
+    </div>
+
+    <div class="examples-section">
+        <div class="example-category">
+            <div class="category-header">
+                <span class="category-icon">🔧</span>
+                <h2>Consultas con Reglas (Rápidas)</h2>
+                <span class="badge badge-rule">Regex • &lt;5ms • $0</span>
+            </div>
+            <p class="category-description">
+                Estas consultas son procesadas por el RuleRouter usando expresiones regulares. 
+                Son instantáneas y no consumen recursos del LLM.
+            </p>
+            
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-query">"películas de 2010"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Año específico<br/>
+                        <strong>Resultado:</strong> Inception
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas de Nolan"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Director<br/>
+                        <strong>Resultado:</strong> Todas las películas de Christopher Nolan
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas de acción"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Género<br/>
+                        <strong>Resultado:</strong> The Dark Knight
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas de 2008 a 2014"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Rango de años<br/>
+                        <strong>Resultado:</strong> Películas entre esos años
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"director Nolan en 2010"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Director + año específico<br/>
+                        <strong>Resultado:</strong> Inception
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas dirigidas por Nolan después de 2010"</div>
+                    <div class="example-explanation">
+                        <strong>Patrón:</strong> Director + comparador temporal<br/>
+                        <strong>Resultado:</strong> Interstellar (2014)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-category">
+            <div class="category-header">
+                <span class="category-icon">🤖</span>
+                <h2>Consultas con IA (Complejas)</h2>
+                <span class="badge badge-llm">Claude • ~1s • $0.002</span>
+            </div>
+            <p class="category-description">
+                Estas consultas requieren comprensión del lenguaje natural y generación de LINQ dinámico. 
+                Son procesadas por el LLMRouter usando Claude a través de OpenRouter.
+            </p>
+            
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-query">"películas de ciencia ficción con más de 8.5 de rating"</div>
+                    <div class="example-explanation">
+                        <strong>LINQ generado:</strong> <code>m.Genre.Contains("Sci-Fi") &amp;&amp; m.Rating &gt; 8.5</code><br/>
+                        <strong>Resultado:</strong> Inception (8.8)
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas dramáticas de menos de 2 horas"</div>
+                    <div class="example-explanation">
+                        <strong>LINQ generado:</strong> <code>m.Genre.Contains("Drama") &amp;&amp; m.Runtime &lt; 120</code><br/>
+                        <strong>Complejidad:</strong> Conversión de unidades (horas → minutos)
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas de Tarantino con más de 8 de rating"</div>
+                    <div class="example-explanation">
+                        <strong>LINQ generado:</strong> <code>m.Director.Contains("Tarantino") &amp;&amp; m.Rating &gt; 8.0</code><br/>
+                        <strong>Resultado:</strong> Pulp Fiction (8.9)
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-query">"películas de acción cortas"</div>
+                    <div class="example-explanation">
+                        <strong>LINQ generado:</strong> <code>m.Genre.Contains("Action") &amp;&amp; m.Runtime &lt; 120</code><br/>
+                        <strong>Complejidad:</strong> Interpretación de "cortas"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="architecture-section">
+        <h2>🏗️ Arquitectura del Sistema</h2>
+        <div class="architecture-card">
+            <h3>Flujo de Procesamiento</h3>
+            <ol class="flow-list">
+                <li>
+                    <strong>1. Usuario escribe consulta</strong>
+                    <p>Interfaz Blazor captura el texto en lenguaje natural</p>
+                </li>
+                <li>
+                    <strong>2. QueryProcessor recibe la consulta</strong>
+                    <p>Componente orquestador decide qué router usar</p>
+                </li>
+                <li>
+                    <strong>3. RuleRouter intenta primero</strong>
+                    <p>Evalúa patrones regex predefinidos (rápido, gratis)</p>
+                </li>
+                <li>
+                    <strong>4. Si no hay match → LLMRouter</strong>
+                    <p>Genera LINQ dinámico usando Claude via OpenRouter</p>
+                </li>
+                <li>
+                    <strong>5. Evaluación del LINQ</strong>
+                    <p>Regex-based evaluator aplica filtros a la colección</p>
+                </li>
+                <li>
+                    <strong>6. Respuesta al cliente</strong>
+                    <p>JSON con resultados + metadata (source, LINQ generado, count)</p>
+                </li>
+            </ol>
+        </div>
+
+        <div class="stats-card">
+            <h3>📊 Optimización de Costes</h3>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">Consultas con Reglas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">30%</div>
+                    <div class="stat-label">Consultas con IA</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">80%</div>
+                    <div class="stat-label">Ahorro de Costes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">300x</div>
+                    <div class="stat-label">Más Rápido (reglas)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>¿Listo para probar?</h2>
+        <p>Usa estos ejemplos como referencia y crea tus propias consultas</p>
+        <a href="/query" class="btn-primary">Ir a Consultas</a>
+    </div>
+</div>
+
+<style>
+    .examples-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .examples-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .examples-header h1 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .examples-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .examples-section {
+        margin-bottom: 3rem;
+    }
+
+    .example-category {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .category-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .category-icon {
+        font-size: 2rem;
+    }
+
+    .category-header h2 {
+        flex: 1;
+        margin: 0;
+        color: #333;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .badge-rule {
+        background: #28a745;
+        color: white;
+    }
+
+    .badge-llm {
+        background: #667eea;
+        color: white;
+    }
+
+    .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .examples-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .example-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .example-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .example-query {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .example-explanation {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .example-explanation strong {
+        color: #333;
+    }
+
+    .example-explanation code {
+        background: #f0f0f0;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        color: #d63384;
+    }
+
+    .architecture-section {
+        margin-top: 4rem;
+    }
+
+    .architecture-section h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .architecture-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .architecture-card h3 {
+        color: #667eea;
+        margin-bottom: 1.5rem;
+    }
+
+    .flow-list {
+        list-style: none;
+        padding: 0;
+        counter-reset: flow-counter;
+    }
+
+    .flow-list li {
+        position: relative;
+        padding-left: 3rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-left: 2px solid #e0e0e0;
+    }
+
+    .flow-list li:last-child {
+        border-left: none;
+    }
+
+    .flow-list li strong {
+        color: #667eea;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .flow-list li p {
+        color: #666;
+        margin: 0;
+    }
+
+    .stats-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    .stats-card h3 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 2rem;
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .cta-section {
+        text-align: center;
+        background: #f8f9fa;
+        padding: 3rem 2rem;
+        border-radius: 12px;
+        margin-top: 3rem;
+    }
+
+    .cta-section h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+        color: #666;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        color: white;
+    }
+</style>
