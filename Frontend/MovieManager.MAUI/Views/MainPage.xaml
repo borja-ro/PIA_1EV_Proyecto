@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MovieManager.MAUI.ViewModels"
+             xmlns:models="clr-namespace:MovieManager.Core.Models;assembly=MovieManager.Core"
+             xmlns:converters="clr-namespace:MovieManager.MAUI.Converters"
+             x:Class="MovieManager.MAUI.Views.MainPage"
+             x:DataType="viewModels:MainViewModel"
+             Title="MovieManager MAUI">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto">
+        
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20">
+            <VerticalStackLayout.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#667eea" Offset="0.0" />
+                    <GradientStop Color="#764ba2" Offset="1.0" />
+                </LinearGradientBrush>
+            </VerticalStackLayout.Background>
+            <Label Text="🎬 MovieManager MAUI" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+            <Label Text="Consultas en Lenguaje Natural" TextColor="White" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Data Loading -->
+        <HorizontalStackLayout Grid.Row="1" Spacing="10" Padding="10" HorizontalOptions="Center">
+            <Button Text="Cargar Datos de Prueba" Command="{Binding LoadTestDataCommand}" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}" />
+            <Button Text="Cargar Dataset Completo" Command="{Binding LoadFullDatasetCommand}" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}" />
+        </HorizontalStackLayout>
+
+        <!-- Query & Results -->
+        <Grid Grid.Row="2" RowDefinitions="Auto, *">
+            <!-- Query Input -->
+            <Entry Grid.Row="0" 
+                   Placeholder="Escribe tu consulta aquí..." 
+                   Text="{Binding QueryText}" 
+                   ReturnCommand="{Binding ExecuteQueryCommand}"
+                   Margin="10" />
+
+            <!-- Results List -->
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Movies}" Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Movie">
+                        <Frame Padding="10" Margin="5" CornerRadius="5" BorderColor="LightGray">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18" />
+                                <Label Text="{Binding Year, StringFormat='({0})'}" />
+                                <Label Text="{Binding Genre, StringFormat='Género: {0}'}" />
+                                <Label Text="{Binding Director, StringFormat='Director: {0}'}" />
+                                <Label Text="{Binding Rating, StringFormat='Rating: {0}/10'}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Label Grid.Row="3" Text="{Binding StatusMessage}" Padding="10" BackgroundColor="LightGray" />
+
+    </Grid>
+</ContentPage>

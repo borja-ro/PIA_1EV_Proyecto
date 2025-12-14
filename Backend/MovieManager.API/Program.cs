@@ -80,7 +80,7 @@ if (persistenceType == "Database")
     builder.Services.AddDbContext<MovieDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
     
-    builder.Services.AddScoped<IRepository<Movie>, SqliteRepository<Movie>>();
+    builder.Services.AddScoped<IRepository<Movie>, SqliteRepository>();
 }
 else
 {
