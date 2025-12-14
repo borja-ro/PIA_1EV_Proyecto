@@ -8,7 +8,7 @@ namespace MovieManager.MAUI.Services;
 public class McpApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly string _baseUrl = "http://localhost:5001"; // O la IP si se prueba en un dispositivo físico
+    private readonly string _baseUrl = "http://192.168.100.50:5001"; // O la IP si se prueba en un dispositivo físico
 
     public McpApiClient()
     {

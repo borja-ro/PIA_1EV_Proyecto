@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:supportsRtl="true"></application>
+	<application
+			android:allowBackup="true"
+			android:supportsRtl="true"
+			android:usesCleartextTraffic="true"
+			android:label="MovieManager">
+
+		<activity
+				android:name="crc64fcf28c0e24b4cc31.MainActivity"
+				android:exported="true"
+				android:launchMode="singleTop"
+				android:configChanges="orientation|screenSize|screenLayout|density|smallestScreenSize|uiMode"
+				android:windowSoftInputMode="adjustPan">
+
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+	</application>
+
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>

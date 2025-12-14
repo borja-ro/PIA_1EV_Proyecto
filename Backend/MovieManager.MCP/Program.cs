@@ -190,7 +190,7 @@ Console.WriteLine(@"
 ║                                                          ║
 ╚══════════════════════════════════════════════════════════╝
 
-🚀 Servidor iniciado en: http://localhost:5001
+🚀 Servidor iniciado en: http://0.0.0.0:5001
 📡 Endpoints disponibles:
    • GET  /              - Info del servidor
    • GET  /health        - Estado del servidor
@@ -205,4 +205,4 @@ Console.WriteLine(@"
 ⚙️  OpenRouter Model: " + openRouterModel + @"
 ");
 
-app.Run("http://localhost:5001");
+app.Run("http://0.0.0.0:5001");
