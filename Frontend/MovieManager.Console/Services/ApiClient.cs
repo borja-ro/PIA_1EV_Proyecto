@@ -52,6 +52,27 @@ public class ApiClient
             return $"✗ Error: {ex.Message}";
         }
     }
+    
+    public async Task<string> LoadFullDatasetAsync()
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync("/load-data", null);
+            var content = await response.Content.ReadAsStringAsync();
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var result = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
+                return result != null ? $"✓ Dataset completo cargado: {result["count"]} películas" : "✓ Dataset cargado";
+            }
+            
+            return $"✗ Error: {response.StatusCode}";
+        }
+        catch (Exception ex)
+        {
+            return $"✗ Error: {ex.Message}";
+        }
+    }
 
     public async Task<QueryResponse?> QueryAsync(string query)
     {

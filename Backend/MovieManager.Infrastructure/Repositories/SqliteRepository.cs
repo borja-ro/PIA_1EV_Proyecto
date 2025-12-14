@@ -6,57 +6,40 @@ using MovieManager.Infrastructure.Data;
 namespace MovieManager.Infrastructure.Repositories;
 
 /// <summary>
-/// SQLite implementation of IRepository using Entity Framework Core
+/// SQLite implementation of IRepository for Movie entities using Entity Framework Core
 /// </summary>
-public class SqliteRepository<T> : IRepository<T> where T : class
+public class SqliteRepository : IRepository<Movie>
 {
     private readonly MovieDbContext _context;
-    private readonly DbSet<T> _dbSet;
+    private readonly DbSet<Movie> _dbSet;
 
     public SqliteRepository(MovieDbContext context)
     {
         _context = context;
-        _dbSet = _context.Set<T>();
+        _dbSet = _context.Set<Movie>();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<Movie>> GetAllAsync()
     {
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<Movie?> GetByIdAsync(int id)
     {
-        var idProperty = typeof(T).GetProperty("Id");
-        if (idProperty == null)
-            throw new InvalidOperationException($"Type {typeof(T).Name} does not have an Id property");
-
-        return await _dbSet.FirstOrDefaultAsync(item =>
-            EF.Property<int>(item, "Id") == id);
+        return await _dbSet.FindAsync(id);
     }
 
-    public async Task<T> AddAsync(T entity)
+    public async Task<Movie> AddAsync(Movie entity)
     {
-        // Set CreatedAt if exists
-        var createdAtProperty = typeof(T).GetProperty("CreatedAt");
-        if (createdAtProperty != null && createdAtProperty.PropertyType == typeof(DateTime))
-        {
-            createdAtProperty.SetValue(entity, DateTime.UtcNow);
-        }
-
+        entity.CreatedAt = DateTime.UtcNow;
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task<Movie> UpdateAsync(Movie entity)
     {
-        // Set UpdatedAt if exists
-        var updatedAtProperty = typeof(T).GetProperty("UpdatedAt");
-        if (updatedAtProperty != null && updatedAtProperty.PropertyType == typeof(DateTime?))
-        {
-            updatedAtProperty.SetValue(entity, DateTime.UtcNow);
-        }
-
+        entity.UpdatedAt = DateTime.UtcNow;
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
         return entity;
@@ -75,20 +58,13 @@ public class SqliteRepository<T> : IRepository<T> where T : class
 
     public async Task LoadFromCsvAsync(string filePath)
     {
-        if (typeof(T).Name != "Movie")
-            throw new NotSupportedException("CSV loading is only supported for Movie entities");
-
         var movies = await CsvLoader.LoadFromCsvAsync(filePath);
 
         // Clear existing data
-        _dbSet.RemoveRange(_dbSet);
-        await _context.SaveChangesAsync();
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Movies");
 
         // Add new data
-        foreach (var movie in movies)
-        {
-            await _dbSet.AddAsync((movie as T)!);
-        }
+        await _dbSet.AddRangeAsync(movies);
         
         await _context.SaveChangesAsync();
     }

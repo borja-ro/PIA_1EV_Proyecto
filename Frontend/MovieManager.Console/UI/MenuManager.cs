@@ -41,12 +41,15 @@ public class MenuManager
                     await LoadTestDataAsync();
                     break;
                 case "2":
-                    await QueryMoviesAsync();
+                    await LoadFullDatasetAsync();
                     break;
                 case "3":
-                    ShowExamples();
+                    await QueryMoviesAsync();
                     break;
                 case "4":
+                    ShowExamples();
+                    break;
+                case "5":
                     System.Console.WriteLine("\n👋 ¡Hasta pronto!");
                     return;
                 default:
@@ -79,10 +82,11 @@ public class MenuManager
         System.Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.Console.WriteLine("  MENÚ PRINCIPAL");
         System.Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        System.Console.WriteLine("  1. 📥 Cargar datos de prueba");
-        System.Console.WriteLine("  2. 🔍 Consultar películas (lenguaje natural)");
-        System.Console.WriteLine("  3. 💡 Ver ejemplos de consultas");
-        System.Console.WriteLine("  4. 🚪 Salir");
+        System.Console.WriteLine("  1. 📥 Cargar datos de prueba (5 películas)");
+        System.Console.WriteLine("  2. 📦 Cargar dataset completo (1000 películas)");
+        System.Console.WriteLine("  3. 🔍 Consultar películas (lenguaje natural)");
+        System.Console.WriteLine("  4. 💡 Ver ejemplos de consultas");
+        System.Console.WriteLine("  5. 🚪 Salir");
         System.Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.Console.Write("\n👉 Selecciona una opción: ");
     }
@@ -91,6 +95,13 @@ public class MenuManager
     {
         System.Console.WriteLine("\n📥 Cargando datos de prueba...");
         var result = await _apiClient.LoadTestDataAsync();
+        System.Console.WriteLine($"   {result}");
+    }
+
+    private async Task LoadFullDatasetAsync()
+    {
+        System.Console.WriteLine("\n📦 Cargando dataset completo...");
+        var result = await _apiClient.LoadFullDatasetAsync();
         System.Console.WriteLine($"   {result}");
     }
 

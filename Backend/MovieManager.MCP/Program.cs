@@ -1,5 +1,4 @@
-using System.Text;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using MovieManager.Core.Interfaces;
 using MovieManager.Core.Models;
 using MovieManager.Infrastructure.Data;
@@ -21,20 +20,50 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configurar repositorio (usar In-Memory por simplicidad)
-builder.Services.AddSingleton<IRepository<Movie>, MemoryRepository<Movie>>();
+// Leer tipo de repositorio desde configuración
+var repositoryType = builder.Configuration["RepositoryType"] ?? "Memory";
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (repositoryType == "Sqlite")
+{
+    Console.WriteLine($"[CONFIG] Usando SQLite: {connectionString}");
+    
+    // Registrar DbContext
+    builder.Services.AddDbContext<MovieDbContext>(options =>
+        options.UseSqlite(connectionString));
+    
+    // Registrar SqliteRepository
+    builder.Services.AddScoped<IRepository<Movie>, SqliteRepository>();
+}
+else
+{
+    Console.WriteLine("[CONFIG] Usando MemoryRepository (en RAM)");
+    builder.Services.AddSingleton<IRepository<Movie>, MemoryRepository<Movie>>();
+}
+
 // Configurar OpenRouter API Key desde configuración
 var openRouterApiKey = builder.Configuration["OpenRouter:ApiKey"] ?? 
                        Environment.GetEnvironmentVariable("OPENROUTER_API_KEY") ??
                        throw new InvalidOperationException("OpenRouter API Key no configurada");
 
-var openRouterModel = builder.Configuration["OpenRouter:Model"] ?? "anthropic/claude-3.5-sonnet";
+var openRouterModel = builder.Configuration["OpenRouter:Model"] ?? "anthropic/claude-sonnet-4.5";
 
 // Registrar servicios
 builder.Services.AddSingleton(sp => new LLMRouter(openRouterApiKey, openRouterModel));
 builder.Services.AddScoped<QueryProcessor>();
 
 var app = builder.Build();
+
+// Asegurar que la base de datos existe (solo si usamos SQLite)
+if (repositoryType == "Sqlite")
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
+        dbContext.Database.EnsureCreated();
+        Console.WriteLine("[INFO] Base de datos SQLite inicializada");
+    }
+}
 
 app.UseCors("AllowAll");
 
@@ -109,8 +138,6 @@ app.MapPost("/load-data", async (IRepository<Movie> repository) =>
     try
     {
         // Construir ruta al CSV desde la raíz del proyecto
-        // Cuando se ejecuta con 'dotnet run', el directorio base suele ser bin/Debug/net8.0/
-        // Necesitamos subir 5 niveles para llegar a la raíz de la solución
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         var projectRoot = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", ".."));
         var csvPath = Path.Combine(projectRoot, "Data", "movies.csv");
