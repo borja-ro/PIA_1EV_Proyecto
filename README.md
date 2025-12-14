@@ -263,12 +263,6 @@ dotnet run
 - **CLAUDE.md**: Documentación técnica completa, decisiones de arquitectura
 - **Swagger UI**: http://localhost:5000/swagger (cuando API REST esté corriendo)
 
----
-
-## 👨‍💻 Autor
-
-**Borja Ramos Oliva**  
-
 
 ---
 
@@ -277,7 +271,6 @@ dotnet run
 
 **Uso Académico y Educativo**
 
-Este proyecto fue desarrollado como parte del curso PIA (Programación de Inteligencia Artificial) en la Universidad Carlos III de Madrid.
 
 Permisos:
 - ✅ Uso para fines educativos y de aprendizaje
