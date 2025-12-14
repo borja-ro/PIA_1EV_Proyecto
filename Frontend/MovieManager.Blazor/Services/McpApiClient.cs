@@ -81,4 +81,27 @@ public class McpApiClient
             return null;
         }
     }
+
+    public async Task<string> LoadFullDatasetAsync()
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync("/load-data", null);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<JsonElement>();
+                var count = result.GetProperty("count").GetInt32();
+                return $"✅ {count} películas cargadas del dataset completo";
+            }
+            
+            _logger.LogError("Error loading full dataset: {StatusCode}", response.StatusCode);
+            return "❌ Error al cargar el dataset completo";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception loading full dataset");
+            return "❌ Error de conexión al cargar dataset";
+        }
+    }
 }

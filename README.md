@@ -56,7 +56,7 @@ cd PIA_1EV_Proyecto
 
 ## 🚀 Cómo Ejecutar el Proyecto
 
-Tienes **3 formas** de usar el sistema:
+ **3 formas** de usar el sistema:
 
 ### 🎯 OPCIÓN 1: Aplicación Web (Blazor) - RECOMENDADO
 

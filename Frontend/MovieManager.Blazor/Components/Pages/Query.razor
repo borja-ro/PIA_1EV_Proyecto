@@ -31,9 +31,21 @@
                 }
                 else
                 {
-                    <span>📥 Cargar datos de prueba (5 películas)</span>
+                    <span>📥 Cargar 5 películas de prueba</span>
                 }
             </button>
+            
+            <button class="btn btn-primary" @onclick="LoadFullDataset" disabled="@isLoading">
+                @if (isLoadingFullDataset)
+                {
+                    <span>⏳ Cargando dataset...</span>
+                }
+                else
+                {
+                    <span>📦 Cargar dataset completo (1000 películas)</span>
+                }
+            </button>
+            
             @if (!string.IsNullOrEmpty(loadDataMessage))
             {
                 <span class="load-message">@loadDataMessage</span>
@@ -142,6 +154,7 @@
     private bool isLoadingData = false;
     private bool isServerHealthy = true;
     private string loadDataMessage = "";
+    private bool isLoadingFullDataset = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -157,6 +170,18 @@
         loadDataMessage = await McpClient.LoadTestDataAsync();
 
         isLoadingData = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadFullDataset()
+    {
+        isLoadingFullDataset = true;
+        loadDataMessage = "";
+        StateHasChanged();
+
+        loadDataMessage = await McpClient.LoadFullDatasetAsync();
+
+        isLoadingFullDataset = false;
         StateHasChanged();
     }
 

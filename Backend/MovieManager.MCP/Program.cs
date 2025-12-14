@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using MovieManager.Core.Interfaces;
 using MovieManager.Core.Models;
+using MovieManager.Infrastructure.Data;
 using MovieManager.Infrastructure.Repositories;
 using MovieManager.MCP.Models;
 using MovieManager.MCP.Routers;
@@ -67,70 +68,91 @@ app.MapPost("/query", async (QueryRequest request, QueryProcessor processor) =>
     return Results.Ok(response);
 });
 
-// Endpoint para cargar datos de prueba
+// Endpoint para cargar datos de prueba (hardcodeados)
 app.MapPost("/load-test-data", async (IRepository<Movie> repository) =>
 {
-    // Cargar algunas películas de prueba
     var testMovies = new List<Movie>
     {
-        new Movie
-        {
-            Title = "Inception",
-            Year = 2010,
-            Genre = "Sci-Fi",
-            Rating = 8.8,
-            Director = "Christopher Nolan",
-            Runtime = 148,
-            Overview = "A thief who steals corporate secrets through dream-sharing technology."
-        },
-        new Movie
-        {
-            Title = "The Dark Knight",
-            Year = 2008,
-            Genre = "Action",
-            Rating = 9.0,
-            Director = "Christopher Nolan",
-            Runtime = 152,
-            Overview = "Batman faces the Joker in Gotham City."
-        },
-        new Movie
-        {
-            Title = "Interstellar",
-            Year = 2014,
-            Genre = "Sci-Fi",
-            Rating = 8.6,
-            Director = "Christopher Nolan",
-            Runtime = 169,
-            Overview = "A team of explorers travel through a wormhole in space."
-        },
-        new Movie
-        {
-            Title = "Pulp Fiction",
-            Year = 1994,
-            Genre = "Crime",
-            Rating = 8.9,
-            Director = "Quentin Tarantino",
-            Runtime = 154,
-            Overview = "The lives of two mob hitmen, a boxer, and a pair of diner bandits intertwine."
-        },
-        new Movie
-        {
-            Title = "The Shawshank Redemption",
-            Year = 1994,
-            Genre = "Drama",
-            Rating = 9.3,
-            Director = "Frank Darabont",
-            Runtime = 142,
-            Overview = "Two imprisoned men bond over years, finding redemption."
-        }
+        new() { Title = "Inception", Year = 2010, Genre = "Sci-Fi", Rating = 8.8, 
+                Director = "Christopher Nolan", Runtime = 148, 
+                Overview = "A thief who steals corporate secrets through dream-sharing technology." },
+        new() { Title = "The Dark Knight", Year = 2008, Genre = "Action", Rating = 9.0, 
+                Director = "Christopher Nolan", Runtime = 152, 
+                Overview = "Batman faces the Joker in Gotham City." },
+        new() { Title = "Interstellar", Year = 2014, Genre = "Sci-Fi", Rating = 8.6, 
+                Director = "Christopher Nolan", Runtime = 169, 
+                Overview = "A team of explorers travel through a wormhole in space." },
+        new() { Title = "Pulp Fiction", Year = 1994, Genre = "Crime", Rating = 8.9, 
+                Director = "Quentin Tarantino", Runtime = 154, 
+                Overview = "The lives of two mob hitmen, a boxer, and other criminals intertwine." },
+        new() { Title = "The Matrix", Year = 1999, Genre = "Sci-Fi", Rating = 8.7, 
+                Director = "Wachowski Brothers", Runtime = 136, 
+                Overview = "A computer hacker learns about the true nature of reality." }
     };
-
+    
     foreach (var movie in testMovies)
     {
         await repository.AddAsync(movie);
     }
+    
+    return Results.Ok(new 
+    { 
+        success = true,
+        message = "Datos de prueba cargados",
+        count = testMovies.Count
+    });
+});
 
-    return Results.Ok(new { message = "Datos de prueba cargados", count = testMovies.Count });
+// Endpoint para cargar dataset completo desde CSV
+app.MapPost("/load-data", async (IRepository<Movie> repository) =>
+{
+    try
+    {
+        // Construir ruta al CSV desde la raíz del proyecto
+        // Cuando se ejecuta con 'dotnet run', el directorio base suele ser bin/Debug/net8.0/
+        // Necesitamos subir 5 niveles para llegar a la raíz de la solución
+        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        var projectRoot = Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..", "..", ".."));
+        var csvPath = Path.Combine(projectRoot, "Data", "movies.csv");
+        
+        Console.WriteLine($"[DEBUG] Buscando CSV en: {csvPath}");
+        
+        if (!File.Exists(csvPath))
+        {
+            Console.WriteLine($"[ERROR] CSV no encontrado");
+            return Results.NotFound(new 
+            { 
+                success = false,
+                message = $"CSV no encontrado en: {csvPath}",
+                count = 0 
+            });
+        }
+        
+        Console.WriteLine($"[INFO] CSV encontrado, cargando...");
+        var movies = await CsvLoader.LoadFromCsvAsync(csvPath);
+        
+        Console.WriteLine($"[INFO] {movies.Count} películas leídas del CSV");
+        
+        foreach (var movie in movies)
+        {
+            await repository.AddAsync(movie);
+        }
+        
+        Console.WriteLine($"[SUCCESS] {movies.Count} películas cargadas en el repositorio");
+        
+        return Results.Ok(new 
+        { 
+            success = true,
+            message = "Dataset completo cargado correctamente",
+            count = movies.Count,
+            repositoryType = repository.GetType().Name
+        });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[ERROR] Excepción: {ex.Message}");
+        return Results.Problem($"Error: {ex.Message}");
+    }
 });
 
 Console.WriteLine(@"
@@ -143,10 +165,11 @@ Console.WriteLine(@"
 
 🚀 Servidor iniciado en: http://localhost:5001
 📡 Endpoints disponibles:
-   • GET  /           - Info del servidor
-   • GET  /health     - Estado del servidor
-   • POST /query      - Procesar consulta en lenguaje natural
-   • POST /load-test-data - Cargar datos de prueba
+   • GET  /              - Info del servidor
+   • GET  /health        - Estado del servidor
+   • POST /query         - Procesar consulta en lenguaje natural
+   • POST /load-data     - Cargar dataset completo (1000 películas)
+   • POST /load-test-data - Cargar 5 películas de prueba
 
 💡 Ejemplo de uso:
    POST /query
